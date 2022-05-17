@@ -1,9 +1,11 @@
 class UsersController < ApplicationController
+  protect_from_forgery with: :null_session
   before_action :set_user, only: %i[ show edit update destroy ]
 
   # GET /users or /users.json
   def index
-    @users = User.all
+    users = User.all
+    render json: users, status: 200
   end
 
   # GET /users/1 or /users/1.json
@@ -21,17 +23,13 @@ class UsersController < ApplicationController
 
   # POST /users or /users.json
   def create
-    @user = User.new(user_params)
+    user = User.new(user_params)
 
-    respond_to do |format|
-      if @user.save
-        format.html { redirect_to user_url(@user), notice: "User was successfully created." }
-        format.json { render :show, status: :created, location: @user }
+      if user.save
+        render json: user, status: 200
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+        render json: {error: "Error creating user"}, status: 412
       end
-    end
   end
 
   # PATCH/PUT /users/1 or /users/1.json
@@ -65,6 +63,9 @@ class UsersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.require(:user).permit(:name, :email)
+      params.require(:user).permit([
+        :name, 
+        :email
+        ])
     end
 end
