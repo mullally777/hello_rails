@@ -10,8 +10,8 @@ class UsersController < ApplicationController
 
   # GET /users/1 or /users/1.json
   def show
-    user = User.find_by(id: params[:id])
-    render json: user, status: 200
+      user = User.find_by(id: params[:id])
+      render json: user, status: 200
   end
 
   # GET /users/new
@@ -25,13 +25,17 @@ class UsersController < ApplicationController
 
   # POST /users or /users.json
   def create
-    user = User.new(user_params)
+    if !auth? 
+      render json: {error: "Unauthorized"}, status: 401
+    else
+      user = User.new(user_params)
 
       if user.save
         render json: user, status: 200
       else
         render json: {error: "Error creating user"}, status: 412
       end
+    end
   end
 
   # PATCH/PUT /users/1 or /users/1.json
@@ -69,5 +73,10 @@ class UsersController < ApplicationController
         :name, 
         :email
         ])
+    end
+
+    def auth?
+      return false unless request.headers["token"].present?
+      return true if request.headers["token"] == "0ok9ij8uh"
     end
 end
