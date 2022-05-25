@@ -4,7 +4,11 @@ class UsersController < ApplicationController
 
   # GET /users or /users.json
   def index
-    users = User.all
+    if params[:id]
+      users = User.find params[:id]
+    else
+      users = User.all
+    end
     render json: users, status: 200
   end
 
