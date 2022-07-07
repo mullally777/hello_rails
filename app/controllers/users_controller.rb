@@ -4,12 +4,13 @@ class UsersController < ApplicationController
 
   # GET /users or /users.json
   def index
-    if params[:id]
-      users = User.find params[:id]
+    v = request.query_parameters
+    if v[:age]
+      users = User.where(age: params[:age])
+      render json: users, status: 200
     else
-      users = User.all
+      render 'index'
     end
-    render json: users, status: 200
   end
 
   # GET /users/1 or /users/1.json
@@ -65,6 +66,9 @@ class UsersController < ApplicationController
     end
   end
 
+  def greet
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
@@ -75,7 +79,7 @@ class UsersController < ApplicationController
     def user_params
       params.require(:user).permit([
         :name, 
-        :email
+        :age
         ])
     end
 
