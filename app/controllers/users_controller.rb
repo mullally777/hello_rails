@@ -6,8 +6,8 @@ class UsersController < ApplicationController
   # GET /users or /users.json
   def index
     v = request.query_parameters
-    if v[:age]
-      users = User.where(age: params[:age])
+    if v[:name]
+      users = User.where(age: params[:name])
       render json: users, status: 200
     else
       render 'index'
