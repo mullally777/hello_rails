@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   protect_from_forgery with: :null_session
+  skip_before_action :verify_authenticity_token
   before_action :set_user, only: %i[ show edit update destroy ]
 
   # GET /users or /users.json
@@ -30,7 +31,7 @@ class UsersController < ApplicationController
 
   # POST /users or /users.json
   def create
-    if !auth? 
+    if !auth?
       render json: {error: "Unauthorized"}, status: 401
     else
       user = User.new(user_params)
@@ -78,13 +79,15 @@ class UsersController < ApplicationController
     # Only allow a list of trusted parameters through.
     def user_params
       params.require(:user).permit([
-        :name, 
+        :name,
         :age
         ])
     end
 
     def auth?
-      return false unless request.headers["token"].present?
-      return true if request.headers["token"] == "0ok9ij8uh"
+      return false unless cookies[:session_id] == "777"
+      true
+      #return false unless request.headers["token"].present?
+      #return true if request.headers["token"] == "0ok9ij8uh"
     end
 end
