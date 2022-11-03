@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   def index
     v = request.query_parameters
     if v[:name]
-      users = User.where(name: params[:name])
+      users = User.where(name: params[:name].capitalize)
       render json: users, status: 200
     else
       render 'index'
