@@ -85,7 +85,7 @@ class UsersController < ApplicationController
     end
 
     def auth?
-      #return false unless cookies[:session_id] == "0ok9ij8uh?"
+      return false unless cookies[:session_id] == "0ok9ij8uh?"
       true
       #return false unless request.headers["token"].present?
       #return true if request.headers["token"] == "0ok9ij8uh?"
